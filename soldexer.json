@@ -8,7 +8,7 @@
   },
   "pipes": {
     "attestations": {
-      "fromBlock": 350635788
+      "fromBlock": 345635788
     }
   }
 }
