@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "ts-node src/utils/main.ts"
+    "start": "ts-node src/main.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
