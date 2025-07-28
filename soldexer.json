@@ -1,0 +1,14 @@
+{
+  "portalUrl": "https://portal.sqd.dev",
+  "clickhouse": {
+    "url": "http://localhost:8123",
+    "database": "default",
+    "username": "default",
+    "password": ""
+  },
+  "pipes": {
+    "attestations": {
+      "fromBlock": 350635788
+    }
+  }
+}
