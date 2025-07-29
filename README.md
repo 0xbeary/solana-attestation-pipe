@@ -1,24 +1,130 @@
-# solana-attestation-pipe
+# Solana Attestation Service Indexer
 
-Pipes indexer for solana attestation data
+A comprehensive indexer for the Solana Attestation Service (SAS) ecosystem that captures and processes all 12 instruction types across the complete credential hierarchy: Credentials → Schemas → Attestations.
 
-TODO: fill 
+## Features
 
-```
+- **Complete SAS Coverage**: Indexes all 12 instruction types including credential management, schema operations, attestation lifecycle, and tokenization
+- **Hierarchical Data Model**: Preserves relationships between credentials, schemas, and attestations
+- **Tokenization Support**: Full support for SPL Token-2022 integration and tokenized attestations
+- **Real-time Analytics**: Comprehensive query collection for business intelligence and monitoring
+- **Production Ready**: Built with ClickHouse for high-performance analytics
+
+## Quick Start
+
+### Installation and Setup
+
+```bash
+# Install dependencies
 yarn install
 
-docker compose up -d
+# Start ClickHouse database
+npm run up
+# or: docker compose up -d
 
-yarn start
+# Start the indexer
+npm start
+# or: yarn start
 ```
 
-`docker compose down -v` then `docker compose up -d` to restart the db and the indexer
+### Database Management
 
+```bash
+# Start database
+npm run up
 
+# Stop database and remove data
+npm run down
 
-to get the last 10 attestations run 
+# Reset database (stop, remove data, and restart)
+npm run reset
 ```
-docker exec -it soldexer_clickhouse clickhouse-client --query "SELECT slot, timestamp, credential, schema, authority, claim_json, expiry FROM attestations_raw ORDER BY slot DESC LIMIT 10;"
+
+### Legacy Commands
+
+```bash
+# Alternative database commands
+docker compose up -d      # Start database
+docker compose down -v    # Stop and clean database
 ```
 
-Combine this pipe with other attestation pipes in a modular way to perform powerful requests.
+## Data Analysis
+
+The indexer creates 5 specialized tables covering all SAS instruction types:
+
+- `credentials_raw` - Credential creation and management
+- `schemas_raw` - Schema definitions and modifications  
+- `attestations_raw` - Attestation lifecycle and tokenization
+- `tokenization_raw` - Schema tokenization events
+- `events_raw` - Program event emissions
+
+### Running Analytics Scripts
+
+Two comprehensive analytics scripts are available in the `scripts/` folder:
+
+```bash
+# Basic health check and overview
+npm run test-queries
+# or: npx ts-node scripts/test-queries.ts
+
+# Detailed ecosystem analysis  
+npm run detailed-analytics
+# or: npx ts-node scripts/detailed-analytics.ts
+
+# Run both analytics scripts
+npm run analytics
+```
+
+### Direct Database Queries
+
+Access ClickHouse directly for custom queries:
+
+```bash
+# Get latest attestations
+docker exec -it soldexer_clickhouse clickhouse-client --query "SELECT slot, timestamp, credential_pda, schema_pda, authority, claim_data, expiry FROM attestations_raw ORDER BY slot DESC LIMIT 10;"
+
+# Check instruction type distribution
+docker exec -it soldexer_clickhouse clickhouse-client --query "SELECT instruction_type, COUNT(*) as count FROM (SELECT instruction_type FROM credentials_raw UNION ALL SELECT instruction_type FROM schemas_raw UNION ALL SELECT instruction_type FROM attestations_raw) GROUP BY instruction_type ORDER BY count DESC;"
+
+# Authority ecosystem overview
+docker exec -it soldexer_clickhouse clickhouse-client --query "SELECT authority, COUNT(DISTINCT credential_pda) as credentials, COUNT(DISTINCT schema_pda) as schemas, COUNT(DISTINCT attestation_pda) as attestations FROM (SELECT authority, credential_pda, '' as schema_pda, '' as attestation_pda FROM credentials_raw WHERE instruction_type = 'createCredential' UNION ALL SELECT authority, credential_pda, schema_pda, '' as attestation_pda FROM schemas_raw WHERE instruction_type = 'createSchema' UNION ALL SELECT authority, credential_pda, schema_pda, attestation_pda FROM attestations_raw WHERE instruction_type IN ('createAttestation', 'createTokenizedAttestation')) combined GROUP BY authority ORDER BY attestations DESC LIMIT 10;"
+```
+
+## Query Collection
+
+Comprehensive SQL analytics are available in the `queries/` directory:
+
+- `dashboard.sql` - Executive KPIs and quick insights
+- `monitoring.sql` - Real-time monitoring and health checks
+- `sas_analytics.sql` - Comprehensive ecosystem analysis
+- `advanced_analytics.sql` - Deep insights and network analysis
+
+## Supported Instructions
+
+The indexer captures all 12 SAS instruction types:
+
+**Core Management**
+- `createCredential` - Establish credential authorities
+- `createSchema` - Define attestation data structures
+- `changeSchemaStatus` - Manage schema lifecycle
+
+**Schema Modifications**  
+- `changeAuthorizedSigners` - Update credential permissions
+- `changeSchemaDescription` - Modify schema metadata
+- `changeSchemaVersion` - Version control and updates
+
+**Attestation Lifecycle**
+- `createAttestation` - Issue standard attestations
+- `closeAttestation` - Terminate attestations
+
+**Tokenization**
+- `tokenizeSchema` - Create token representations
+- `createTokenizedAttestation` - Issue tokenized attestations
+- `closeTokenizedAttestation` - Close tokenized attestations
+
+**Events**
+- `emitEvent` - Structured event logging
+
+## Architecture
+
+This indexer is designed to be modular and can be combined with other attestation pipes for comprehensive ecosystem analysis. The ClickHouse backend provides high-performance analytics capabilities for real-time monitoring and business intelligence.

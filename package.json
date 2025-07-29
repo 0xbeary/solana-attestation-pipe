@@ -1,6 +1,12 @@
 {
   "scripts": {
-    "start": "ts-node src/main.ts"
+    "start": "ts-node src/main.ts",
+    "test-queries": "ts-node scripts/test-queries.ts",
+    "detailed-analytics": "ts-node scripts/detailed-analytics.ts",
+    "analytics": "npm run test-queries && npm run detailed-analytics",
+    "up": "docker compose up -d",
+    "down": "docker compose down -v",
+    "reset": "npm run down && npm run up"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
