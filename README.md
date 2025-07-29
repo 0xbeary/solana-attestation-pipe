@@ -16,28 +16,27 @@ A comprehensive indexer for the Solana Attestation Service (SAS) ecosystem that 
 
 ```bash
 # Install dependencies
-yarn install
+pnpm install
 
 # Start ClickHouse database
-npm run up
+pnpm up
 # or: docker compose up -d
 
 # Start the indexer
-npm start
-# or: yarn start
+pnpm start
 ```
 
 ### Database Management
 
 ```bash
 # Start database
-npm run up
+pnpm up
 
 # Stop database and remove data
-npm run down
+pnpm down
 
 # Reset database (stop, remove data, and restart)
-npm run reset
+pnpm reset
 ```
 
 ### Legacy Commands
@@ -64,15 +63,15 @@ Two comprehensive analytics scripts are available in the `scripts/` folder:
 
 ```bash
 # Basic health check and overview
-npm run test-queries
+pnpm test-queries
 # or: npx ts-node scripts/test-queries.ts
 
 # Detailed ecosystem analysis  
-npm run detailed-analytics
+pnpm detailed-analytics
 # or: npx ts-node scripts/detailed-analytics.ts
 
 # Run both analytics scripts
-npm run analytics
+pnpm analytics
 ```
 
 ### Direct Database Queries
