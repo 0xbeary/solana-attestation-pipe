@@ -1,31 +1,31 @@
 import { executeQuery, loadSqlQuery } from './query-utils'
 
 async function main() {
-  console.log('Individual Attestation Data Analysis\n')
+  console.log('🔍 Individual Attestation Data Analysis\n')
 
   // 1. Sample attestation data inspection
-  await executeQuery(loadSqlQuery('attestation_data_inspection.sql'), 'Sample Attestation Data Inspection', false)
+  await executeQuery(loadSqlQuery('attestation_data_inspection.sql', 'attestations'), 'Sample Attestation Data Inspection', false)
 
   // 2. Attestation content analysis by schema
-  await executeQuery(loadSqlQuery('content_analysis_by_schema.sql'), 'Attestation Content Analysis by Schema', false)
+  await executeQuery(loadSqlQuery('content_analysis_by_schema.sql', 'attestations'), 'Attestation Content Analysis by Schema', false)
 
   // 3. Identity verification attestations (focusing on schemas with identity-related fields)
-  await executeQuery(loadSqlQuery('identity_attestations.sql'), 'Identity Verification Attestations', false)
+  await executeQuery(loadSqlQuery('identity_attestations.sql', 'attestations'), 'Identity Verification Attestations', false)
 
   // 4. Professional attestations analysis
-  await executeQuery(loadSqlQuery('professional_attestations.sql'), 'Professional Attestations Analysis', false)
+  await executeQuery(loadSqlQuery('professional_attestations.sql', 'attestations'), 'Professional Attestations Analysis', false)
 
   // 5. Attestation data size and complexity correlation
-  await executeQuery(loadSqlQuery('data_size_complexity.sql'), 'Attestation Data Size and Complexity', false)
+  await executeQuery(loadSqlQuery('data_size_complexity.sql', 'attestations'), 'Attestation Data Size and Complexity', false)
 
   // 6. Expiry patterns and use case correlation
-  await executeQuery(loadSqlQuery('expiry_patterns.sql'), 'Expiry Patterns and Use Cases', false)
+  await executeQuery(loadSqlQuery('expiry_patterns.sql', 'attestations'), 'Expiry Patterns and Use Cases', false)
 
   // 7. Common claim data patterns (for JSON formatted data)
-  await executeQuery(loadSqlQuery('claim_data_patterns.sql'), 'Common Claim Data Patterns', false)
+  await executeQuery(loadSqlQuery('claim_data_patterns.sql', 'attestations'), 'Common Claim Data Patterns', false)
 
   // 8. Tokenized attestation recipients and use cases
-  await executeQuery(loadSqlQuery('tokenized_recipients.sql'), 'Tokenized Attestation Recipients and Use Cases', false)
+  await executeQuery(loadSqlQuery('tokenized_recipients.sql', 'tokenization'), 'Tokenized Attestation Recipients and Use Cases', false)
 
   console.log('\nAttestation data analysis completed')
   console.log('\nKey Data Insights:')

@@ -71,8 +71,33 @@ export function getQueryExplanation(description: string): string {
   return explanations[description] || 'Analysis query for SAS ecosystem insights.'
 }
 
-export function loadSqlQuery(filename: string): string {
-  const queryPath = join(process.cwd(), 'queries', filename)
+export function loadSqlQuery(filename: string, folder: string = ''): string {
+  let queryPath: string | undefined
+  
+  if (folder) {
+    queryPath = join(process.cwd(), 'queries', folder, filename)
+  } else {
+    // For backward compatibility, try to find the file in any subfolder
+    const fs = require('fs')
+    const path = require('path')
+    const queriesDir = join(process.cwd(), 'queries')
+    
+    // Search through all subdirectories
+    const searchDirs = ['basic', 'analytics', 'attestations', 'tokenization']
+    
+    for (const dir of searchDirs) {
+      const testPath = join(queriesDir, dir, filename)
+      if (fs.existsSync(testPath)) {
+        queryPath = testPath
+        break
+      }
+    }
+    
+    if (!queryPath) {
+      throw new Error(`Query file ${filename} not found in any queries subfolder`)
+    }
+  }
+  
   return readFileSync(queryPath, 'utf8')
 }
 

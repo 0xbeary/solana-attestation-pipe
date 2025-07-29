@@ -1,20 +1,19 @@
 # Analytics Scripts
 
-This directory contains TypeScript scripts for analyzing Solana Attestation Service data.
+This directory contains TypeScript scripts for analyzing Solana Attestation Service data. All scripts use organized SQL queries from the `queries/` directory structure.
 
 ## Scripts Overview
 
 ### test-queries.ts
 **Basic health check and overview analytics**
 
-Provides essential system monitoring and data validation:
-- Table status and record counts
-- Instruction type distribution
-- Top credential authorities
-- Schema complexity analysis
-- Recent attestation activity
-- Authority ecosystem mapping
-- Data freshness monitoring
+Uses queries from `queries/basic/` folder for essential system monitoring:
+- Table status and record counts (`table_status.sql`)
+- Instruction type distribution (`instruction_distribution.sql`) 
+- Top credential authorities (`top_authorities.sql`)
+- Schema complexity analysis (`complex_schemas.sql`)
+- Recent attestation activity (`recent_activity.sql`)
+- Overall data summary (`data_summary.sql`)
 
 **Usage:**
 ```bash
@@ -22,10 +21,9 @@ pnpm test-queries
 ```
 
 **Key Outputs:**
-- System health status
+- System health status and data freshness
 - Data completeness validation
-- Basic ecosystem metrics
-- Authority activity levels
+- Basic ecosystem metrics and authority activity levels
 
 ### detailed-analytics.ts
 **Comprehensive ecosystem analysis**

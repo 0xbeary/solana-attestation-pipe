@@ -4,22 +4,22 @@ async function main() {
   console.log('Testing Solana Attestation Service Queries\n')
 
   // 1. Basic health check - check if tables exist and have data
-  await executeQuery(loadSqlQuery('table_status.sql'), 'Table Status Check')
+  await executeQuery(loadSqlQuery('table_status.sql', 'basic'), 'Table Status Check')
 
   // 2. Check if we have any data at all
-  await executeQuery(loadSqlQuery('data_summary.sql'), 'Overall Data Summary')
+  await executeQuery(loadSqlQuery('data_summary.sql', 'basic'), 'Overall Data Summary')
 
   // 3. Instruction type breakdown
-  await executeQuery(loadSqlQuery('instruction_distribution.sql'), 'Instruction Type Distribution')
+  await executeQuery(loadSqlQuery('instruction_distribution.sql', 'basic'), 'Instruction Type Distribution')
 
   // 4. Top credential authorities (if we have credential data)
-  await executeQuery(loadSqlQuery('top_authorities.sql'), 'Top Credential Authorities')
+  await executeQuery(loadSqlQuery('top_authorities.sql', 'basic'), 'Top Credential Authorities')
 
   // 5. Schema complexity analysis (if we have schema data)
-  await executeQuery(loadSqlQuery('complex_schemas.sql'), 'Most Complex Schemas')
+  await executeQuery(loadSqlQuery('complex_schemas.sql', 'basic'), 'Most Complex Schemas')
 
   // 6. Attestation activity summary (if we have attestation data)
-  await executeQuery(loadSqlQuery('recent_activity.sql'), 'Recent Attestation Activity (Last 30 Days)')
+  await executeQuery(loadSqlQuery('recent_activity.sql', 'basic'), 'Recent Attestation Activity (Last 30 Days)')
 
   // 7. Authority ecosystem overview
   await executeQuery(

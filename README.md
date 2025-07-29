@@ -98,12 +98,31 @@ docker exec -it soldexer_clickhouse clickhouse-client --query "SELECT authority,
 
 ## Query Collection
 
-Comprehensive SQL analytics are available in the `queries/` directory:
+Comprehensive SQL analytics are organized by category in the `queries/` directory:
 
-- `dashboard.sql` - Executive KPIs and quick insights
-- `monitoring.sql` - Real-time monitoring and health checks
-- `sas_analytics.sql` - Comprehensive ecosystem analysis
-- `advanced_analytics.sql` - Deep insights and network analysis
+### Basic Queries (`queries/basic/`)
+- Health checks and overview statistics
+- Table status and data summaries
+- Instruction distribution analysis
+
+### Analytics Queries (`queries/analytics/`)
+- Authority influence ranking
+- Schema performance analysis
+- Daily ecosystem activity
+- Closure pattern analysis
+
+### Attestation Queries (`queries/attestations/`)
+- Individual attestation data inspection
+- Content analysis by schema
+- Identity and professional verification patterns
+- Data size and expiry analysis
+
+### Tokenization Queries (`queries/tokenization/`)
+- SPL Token-2022 integration analysis
+- Tokenized attestation patterns
+- Cross-program impact measurement
+
+See `queries/README.md` for detailed documentation and usage examples.
 
 ## Supported Instructions
 
