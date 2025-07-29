@@ -26,6 +26,51 @@ pnpm test-queries
 - Basic ecosystem metrics and authority activity levels
 
 ### detailed-analytics.ts
+**Deep ecosystem analysis and business intelligence**
+
+Uses queries from `queries/analytics/` and `queries/tokenization/` folders:
+- Schema performance analysis (`analytics/schema_performance.sql`)
+- Authority influence ranking (`analytics/authority_influence.sql`)
+- Schema complexity vs usage (`analytics/schema_complexity.sql`)
+- Daily ecosystem activity (`analytics/daily_activity.sql`)
+- Attestation closure patterns (`analytics/closure_patterns.sql`)
+- Tokenization analysis (`tokenization/tokenized_analysis.sql`)
+- Cross-program tokenization impact (`tokenization/tokenization_impact.sql`)
+
+**Usage:**
+```bash
+pnpm detailed-analytics
+```
+
+**Key Outputs:**
+- Authority influence scores and ecosystem mapping
+- Schema adoption rates and tokenization success
+- Growth trends and operational patterns
+- SPL Token-2022 integration effectiveness
+
+### attestation-data-analysis.ts
+**Individual attestation content and pattern analysis**
+
+Uses queries from `queries/attestations/` and `queries/tokenization/` folders:
+- Attestation data inspection (`attestations/attestation_data_inspection.sql`)
+- Content analysis by schema (`attestations/content_analysis_by_schema.sql`)
+- Identity verification patterns (`attestations/identity_attestations.sql`)
+- Professional credentials analysis (`attestations/professional_attestations.sql`)
+- Data size complexity (`attestations/data_size_complexity.sql`)
+- Expiry patterns (`attestations/expiry_patterns.sql`)
+- Claim data patterns (`attestations/claim_data_patterns.sql`)
+- Tokenized recipients (`tokenization/tokenized_recipients.sql`)
+
+**Usage:**
+```bash
+pnpm attestation-analysis
+```
+
+**Key Outputs:**
+- Real attestation content examples and data formats
+- Use case patterns (identity, professional, etc.)
+- Content complexity and structure analysis
+- Temporal usage characteristics and expiry management
 **Comprehensive ecosystem analysis**
 
 Deep-dive analytics for business intelligence and research:
