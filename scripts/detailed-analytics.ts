@@ -1,5 +1,32 @@
 import { createClient } from '@clickhouse/client'
 
+function getQueryExplanation(description: string): string {
+  const explanations: Record<string, string> = {
+    'Schema Performance Analysis': 
+      'Analyzes attestation volume and tokenization rates by schema, revealing which credential types are most successful and adopted. High tokenization rates indicate schemas optimized for token-based workflows.',
+    
+    'Tokenized Attestation Analysis': 
+      'Deep dive into tokenized attestation patterns, showing token metadata usage and recipient distribution. This reveals how SPL Token-2022 integration is being utilized for credential tokenization.',
+    
+    'Authority Influence Ranking': 
+      'Calculates authority influence scores based on credential control, schema management, and attestation volume. High-influence authorities are key ecosystem participants driving adoption.',
+    
+    'Schema Complexity vs Usage Analysis': 
+      'Correlates schema field complexity with actual usage patterns to identify optimal schema designs. Schemas with high attestations-per-field ratios indicate efficient, well-designed credential structures.',
+    
+    'Daily Ecosystem Activity Timeline': 
+      'Tracks daily activity across all SAS instruction types to identify growth trends and usage patterns. Shows the evolution from credential creation through schema development to attestation issuance.',
+    
+    'Attestation Closure Patterns': 
+      'Analyzes attestation closure behavior, comparing regular vs tokenized closure rates. High closure rates may indicate short-term use cases or active credential lifecycle management.',
+    
+    'Cross-Program Tokenization Impact': 
+      'Measures the effectiveness of schema tokenization by tracking subsequent tokenized attestation creation and recipient diversity. Shows the real-world impact of SPL Token integration.'
+  }
+  
+  return explanations[description] || 'Advanced analysis query for SAS ecosystem insights.'
+}
+
 async function executeQuery(query: string, description: string) {
   const client = createClient({
     url: 'http://localhost:8123',
@@ -8,6 +35,7 @@ async function executeQuery(query: string, description: string) {
 
   try {
     console.log(`\n=== ${description} ===`)
+    console.log(`${getQueryExplanation(description)}`)
     
     const result = await client.query({
       query,

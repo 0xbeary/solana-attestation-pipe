@@ -18,7 +18,7 @@ Provides essential system monitoring and data validation:
 
 **Usage:**
 ```bash
-npx ts-node scripts/test-queries.ts
+pnpm test-queries
 ```
 
 **Key Outputs:**
@@ -40,7 +40,7 @@ Deep-dive analytics for business intelligence and research:
 
 **Usage:**
 ```bash
-npx ts-node scripts/detailed-analytics.ts
+pnpm detailed-analytics
 ```
 
 **Key Outputs:**
@@ -48,6 +48,40 @@ npx ts-node scripts/detailed-analytics.ts
 - Authority network analysis
 - Schema utilization patterns
 - Ecosystem growth trends
+
+### attestation-data-analysis.ts
+**Individual attestation content analysis**
+
+Analyzes actual attestation data to understand real-world use cases:
+- Attestation content inspection and patterns
+- Identity verification use cases
+- Professional credential analysis
+- Data format and encoding patterns
+- Expiry patterns and temporal use cases
+- Tokenized attestation recipient analysis
+- Real-world examples with anonymized data
+
+**Usage:**
+```bash
+pnpm attestation-analysis
+```
+
+**Key Outputs:**
+- What attestations are actually used for
+- Common data structures and patterns
+- Identity vs professional credential usage
+- Data size and complexity analysis
+- Real use case examples
+
+## Combined Analytics
+
+```bash
+# Run basic health check and ecosystem analysis
+pnpm analytics
+
+# Run all analytics including attestation content analysis
+pnpm full-analytics
+```
 
 ## Prerequisites
 

@@ -1,5 +1,35 @@
 import { createClient } from '@clickhouse/client'
 
+function getQueryExplanation(description: string): string {
+  const explanations: Record<string, string> = {
+    'Table Status Check': 
+      'This query provides a health overview of all SAS data tables, showing the latest indexed slot, timestamp, and record counts. Use this to verify the indexer is working and data is being captured across all instruction types.',
+    
+    'Overall Data Summary': 
+      'Aggregates total activity across the entire SAS ecosystem, counting unique instruction types and showing the data time range. This gives you a high-level view of ecosystem adoption and indexer coverage.',
+    
+    'Instruction Type Distribution': 
+      'Breaks down SAS activity by instruction type with percentages, revealing which operations are most common. This helps identify usage patterns like tokenization adoption rates and operational focuses.',
+    
+    'Top Credential Authorities': 
+      'Identifies the most active credential authorities in the ecosystem by creation volume. These are likely the key players and institutional users driving SAS adoption.',
+    
+    'Most Complex Schemas': 
+      'Analyzes schema complexity by field count and layout size, showing the most sophisticated attestation structures. Complex schemas often indicate advanced use cases like identity verification or detailed certifications.',
+    
+    'Recent Attestation Activity (Last 30 Days)': 
+      'Tracks daily attestation creation patterns over the past month, distinguishing between regular and tokenized attestations. Use this to monitor ecosystem activity trends and tokenization adoption.',
+    
+    'Authority Ecosystem Overview': 
+      'Maps the relationship between authorities, credentials, schemas, and attestations to show ecosystem influence and productivity. High attestation-to-schema ratios indicate successful, well-utilized credential systems.',
+    
+    'Data Freshness Status': 
+      'Monitors indexer health by checking how recent the latest data is across all tables. Stale data indicates potential indexing issues that need attention.'
+  }
+  
+  return explanations[description] || 'Analysis query for SAS ecosystem data.'
+}
+
 async function executeQuery(query: string, description: string) {
   const client = createClient({
     url: 'http://localhost:8123',
@@ -8,6 +38,7 @@ async function executeQuery(query: string, description: string) {
 
   try {
     console.log(`\n=== ${description} ===`)
+    console.log(`${getQueryExplanation(description)}`)
     console.log(`Query: ${query.substring(0, 100)}...`)
     
     const result = await client.query({

@@ -3,7 +3,9 @@
     "start": "ts-node src/main.ts",
     "test-queries": "ts-node scripts/test-queries.ts",
     "detailed-analytics": "ts-node scripts/detailed-analytics.ts",
+    "attestation-analysis": "ts-node scripts/attestation-data-analysis.ts",
     "analytics": "npm run test-queries && npm run detailed-analytics",
+    "full-analytics": "npm run test-queries && npm run detailed-analytics && npm run attestation-analysis",
     "up": "docker compose up -d",
     "down": "docker compose down -v",
     "reset": "npm run down && npm run up"

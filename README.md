@@ -59,7 +59,7 @@ The indexer creates 5 specialized tables covering all SAS instruction types:
 
 ### Running Analytics Scripts
 
-Two comprehensive analytics scripts are available in the `scripts/` folder:
+Three comprehensive analytics scripts are available in the `scripts/` folder:
 
 ```bash
 # Basic health check and overview
@@ -70,8 +70,15 @@ pnpm test-queries
 pnpm detailed-analytics
 # or: npx ts-node scripts/detailed-analytics.ts
 
-# Run both analytics scripts
+# Individual attestation data analysis
+pnpm attestation-analysis
+# or: npx ts-node scripts/attestation-data-analysis.ts
+
+# Run basic and detailed analytics
 pnpm analytics
+
+# Run all analytics scripts
+pnpm full-analytics
 ```
 
 ### Direct Database Queries
