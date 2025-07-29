@@ -92,13 +92,25 @@ export class AttestationsStream extends PortalAbstractStream<AttestationRecord> 
 
               const decoded = attestation.instructions.createAttestation.decode(ins)
 
+              // Try to decode as JSON first, fallback to hex if it fails
+              let claimData: string
+              try {
+                const dataString = Buffer.from(decoded.data.data).toString('utf8')
+                // Try to parse as JSON to validate it's valid JSON
+                JSON.parse(dataString)
+                claimData = dataString
+              } catch (e) {
+                // If JSON parsing fails, store as hex
+                claimData = Buffer.from(decoded.data.data).toString('hex')
+              }
+
               const record = {
                 slot: block.header.number,
                 timestamp: new Date(block.header.timestamp * 1000),
                 credential: decoded.accounts.credential,
                 schema: decoded.accounts.schema,
                 authority: decoded.accounts.authority,
-                claimData: Buffer.from(decoded.data.data).toString(),
+                claimData: claimData,
                 expiry: Number(decoded.data.expiry),
               }
 
