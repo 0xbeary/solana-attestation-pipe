@@ -1,183 +1,25 @@
-import { createClient } from '@clickhouse/client'
-
-function getQueryExplanation(description: string): string {
-  const explanations: Record<string, string> = {
-    'Table Status Check': 
-      'This query provides a health overview of all SAS data tables, showing the latest indexed slot, timestamp, and record counts. Use this to verify the indexer is working and data is being captured across all instruction types.',
-    
-    'Overall Data Summary': 
-      'Aggregates total activity across the entire SAS ecosystem, counting unique instruction types and showing the data time range. This gives you a high-level view of ecosystem adoption and indexer coverage.',
-    
-    'Instruction Type Distribution': 
-      'Breaks down SAS activity by instruction type with percentages, revealing which operations are most common. This helps identify usage patterns like tokenization adoption rates and operational focuses.',
-    
-    'Top Credential Authorities': 
-      'Identifies the most active credential authorities in the ecosystem by creation volume. These are likely the key players and institutional users driving SAS adoption.',
-    
-    'Most Complex Schemas': 
-      'Analyzes schema complexity by field count and layout size, showing the most sophisticated attestation structures. Complex schemas often indicate advanced use cases like identity verification or detailed certifications.',
-    
-    'Recent Attestation Activity (Last 30 Days)': 
-      'Tracks daily attestation creation patterns over the past month, distinguishing between regular and tokenized attestations. Use this to monitor ecosystem activity trends and tokenization adoption.',
-    
-    'Authority Ecosystem Overview': 
-      'Maps the relationship between authorities, credentials, schemas, and attestations to show ecosystem influence and productivity. High attestation-to-schema ratios indicate successful, well-utilized credential systems.',
-    
-    'Data Freshness Status': 
-      'Monitors indexer health by checking how recent the latest data is across all tables. Stale data indicates potential indexing issues that need attention.'
-  }
-  
-  return explanations[description] || 'Analysis query for SAS ecosystem data.'
-}
-
-async function executeQuery(query: string, description: string) {
-  const client = createClient({
-    url: 'http://localhost:8123',
-    database: 'default',
-  })
-
-  try {
-    console.log(`\n=== ${description} ===`)
-    console.log(`${getQueryExplanation(description)}`)
-    console.log(`Query: ${query.substring(0, 100)}...`)
-    
-    const result = await client.query({
-      query,
-      format: 'JSONEachRow',
-    })
-    
-    const data = await result.json()
-    console.log('Results:')
-    console.table(data.slice(0, 10)) // Show first 10 rows
-    
-    if (data.length > 10) {
-      console.log(`... and ${data.length - 10} more rows`)
-    }
-    
-    return data
-  } catch (error) {
-    console.error(`Error executing query: ${error}`)
-    return null
-  } finally {
-    await client.close()
-  }
-}
+import { executeQuery, loadSqlQuery } from './query-utils'
 
 async function main() {
   console.log('Testing Solana Attestation Service Queries\n')
 
   // 1. Basic health check - check if tables exist and have data
-  await executeQuery(
-    `SELECT 
-      table_name,
-      MAX(slot) as latest_slot,
-      MAX(timestamp) as latest_timestamp,
-      COUNT(*) as total_records
-    FROM (
-      SELECT 'credentials' as table_name, slot, timestamp FROM credentials_raw
-      UNION ALL
-      SELECT 'schemas' as table_name, slot, timestamp FROM schemas_raw
-      UNION ALL
-      SELECT 'attestations' as table_name, slot, timestamp FROM attestations_raw
-      UNION ALL
-      SELECT 'tokenization' as table_name, slot, timestamp FROM tokenization_raw
-      UNION ALL
-      SELECT 'events' as table_name, slot, timestamp FROM events_raw
-    ) all_data
-    GROUP BY table_name
-    ORDER BY latest_slot DESC`,
-    'Table Status Check'
-  )
+  await executeQuery(loadSqlQuery('table_status.sql'), 'Table Status Check')
 
   // 2. Check if we have any data at all
-  await executeQuery(
-    `SELECT 
-      COUNT(*) as total_instructions,
-      COUNT(DISTINCT instruction_type) as unique_instruction_types,
-      MIN(timestamp) as earliest_data,
-      MAX(timestamp) as latest_data
-    FROM (
-      SELECT instruction_type, timestamp FROM credentials_raw
-      UNION ALL
-      SELECT instruction_type, timestamp FROM schemas_raw
-      UNION ALL
-      SELECT instruction_type, timestamp FROM attestations_raw
-      UNION ALL
-      SELECT instruction_type, timestamp FROM tokenization_raw
-      UNION ALL
-      SELECT instruction_type, timestamp FROM events_raw
-    ) all_instructions`,
-    'Overall Data Summary'
-  )
+  await executeQuery(loadSqlQuery('data_summary.sql'), 'Overall Data Summary')
 
   // 3. Instruction type breakdown
-  await executeQuery(
-    `SELECT 
-      instruction_type,
-      COUNT(*) as count,
-      COUNT(*) * 100.0 / SUM(COUNT(*)) OVER() as percentage
-    FROM (
-      SELECT instruction_type FROM credentials_raw
-      UNION ALL
-      SELECT instruction_type FROM schemas_raw
-      UNION ALL
-      SELECT instruction_type FROM attestations_raw
-      UNION ALL
-      SELECT instruction_type FROM tokenization_raw
-      UNION ALL
-      SELECT instruction_type FROM events_raw
-    ) all_instructions
-    GROUP BY instruction_type
-    ORDER BY count DESC`,
-    'Instruction Type Distribution'
-  )
+  await executeQuery(loadSqlQuery('instruction_distribution.sql'), 'Instruction Type Distribution')
 
   // 4. Top credential authorities (if we have credential data)
-  await executeQuery(
-    `SELECT 
-      authority,
-      COUNT(*) as total_credentials,
-      COUNT(DISTINCT name) as unique_credential_names,
-      MIN(timestamp) as first_created,
-      MAX(timestamp) as last_created
-    FROM credentials_raw 
-    WHERE instruction_type = 'createCredential'
-    GROUP BY authority
-    ORDER BY total_credentials DESC
-    LIMIT 10`,
-    'Top Credential Authorities'
-  )
+  await executeQuery(loadSqlQuery('top_authorities.sql'), 'Top Credential Authorities')
 
   // 5. Schema complexity analysis (if we have schema data)
-  await executeQuery(
-    `SELECT 
-      name,
-      length(field_names) as field_count,
-      length(layout_buffer) / 2 as layout_size_bytes,
-      arrayStringConcat(field_names, ', ') as fields,
-      timestamp as created_at
-    FROM schemas_raw 
-    WHERE instruction_type = 'createSchema'
-    ORDER BY field_count DESC, layout_size_bytes DESC
-    LIMIT 10`,
-    'Most Complex Schemas'
-  )
+  await executeQuery(loadSqlQuery('complex_schemas.sql'), 'Most Complex Schemas')
 
   // 6. Attestation activity summary (if we have attestation data)
-  await executeQuery(
-    `SELECT 
-      DATE(timestamp) as date,
-      COUNT(CASE WHEN instruction_type = 'createAttestation' THEN 1 END) as regular_attestations,
-      COUNT(CASE WHEN instruction_type = 'createTokenizedAttestation' THEN 1 END) as tokenized_attestations,
-      COUNT(CASE WHEN instruction_type LIKE 'close%' THEN 1 END) as closed_attestations,
-      COUNT(*) as total_attestation_instructions
-    FROM attestations_raw 
-    WHERE timestamp >= now() - INTERVAL 30 DAY
-    GROUP BY DATE(timestamp)
-    ORDER BY date DESC
-    LIMIT 10`,
-    'Recent Attestation Activity (Last 30 Days)'
-  )
+  await executeQuery(loadSqlQuery('recent_activity.sql'), 'Recent Attestation Activity (Last 30 Days)')
 
   // 7. Authority ecosystem overview
   await executeQuery(
