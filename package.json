@@ -6,9 +6,9 @@
     "attestation-analysis": "ts-node scripts/attestation-data-analysis.ts",
     "analytics": "npm run test-queries && npm run detailed-analytics",
     "full-analytics": "npm run test-queries && npm run detailed-analytics && npm run attestation-analysis",
-    "up": "docker compose up -d",
-    "down": "docker compose down -v",
-    "reset": "npm run down && npm run up"
+    "db-up": "docker compose up -d",
+    "db-down": "docker compose down -v",
+    "db-reset": "npm run down && npm run up"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
