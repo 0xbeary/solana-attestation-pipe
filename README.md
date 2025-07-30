@@ -19,7 +19,7 @@ A comprehensive indexer for the Solana Attestation Service (SAS) ecosystem that 
 pnpm install
 
 # Start ClickHouse database
-pnpm up
+pnpm db-up
 # or: docker compose up -d
 
 # Start the indexer
@@ -30,13 +30,13 @@ pnpm start
 
 ```bash
 # Start database
-pnpm up
+pnpm db-up
 
 # Stop database and remove data
-pnpm down
+pnpm db-down
 
 # Reset database (stop, remove data, and restart)
-pnpm reset
+pnpm db-reset
 ```
 
 ### Legacy Commands
